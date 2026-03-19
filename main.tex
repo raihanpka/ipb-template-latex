@@ -1,0 +1,329 @@
+%================================================================
+% TEMPLATE TUGAS AKHIR SARJANA (S1)
+% IPB University
+%
+% Diadaptasi dari Template Word PPKI (Pedoman Penulisan Karya Ilmiah) Edisi ke-4
+%
+% Konversi dan adaptasi ke LaTeX oleh:
+%   Raihan Putra Kirana
+%   GitHub: https://github.com/raihanpka
+%
+% Versi: v1.0 (Mei 2026)
+%
+% Silakan gunakan, modifikasi, dan distribusikan secara bebas
+% dengan tetap mencantumkan atribusi di atas.
+%================================================================
+
+\documentclass[12pt,a4paper,openany,twoside]{book}
+
+%--------------------------------------------------------------
+% # Encoding
+% - T1        : Font encoding 8-bit, mendukung karakter Latin penuh
+% - textcomp  : Simbol tambahan encoding TS1
+% - utf8      : Input encoding Unicode, mendukung karakter Indonesia
+% - babel     : Dukungan bahasa Indonesia (hyphenation, tanggal, dan lainnya)
+%--------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian, provide=*]{babel}
+
+%--------------------------------------------------------------
+% # Font
+% - Times New Roman
+% - mathptmx menyediakan Times Roman untuk teks dan matematika.
+% - Alternatif untuk XeLaTeX atau LuaLaTeX dapat menggunakan:
+%     \usepackage{fontspec}
+%     \setmainfont{Times New Roman}
+%--------------------------------------------------------------
+\usepackage{mathptmx}
+
+%--------------------------------------------------------------
+% # Ukuran Halaman & Margin
+% - A4: 21 x 29.7 cm
+% - Kiri 4 cm (binding), Kanan 3 cm, Atas 3 cm, Bawah 3 cm
+%--------------------------------------------------------------
+\usepackage[
+  a4paper,
+  top=3cm,
+  left=4cm,
+  right=3cm,
+  bottom=3cm,
+  headheight=15pt
+]{geometry}
+
+%--------------------------------------------------------------
+% # Spasi & Indentasi
+%--------------------------------------------------------------
+\usepackage{setspace}
+\singlespacing                   % Spasi tunggal (sesuai template)
+\usepackage{indentfirst}          % Indentasi paragraf pertama
+\setlength{\parindent}{1cm}      % Indentasi awal paragraf ±1 cm
+\setlength{\parskip}{0pt}        % Tidak ada jarak antar paragraf
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}  % Jarak float atas/bawah ke teks
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}    % Jarak float di tengah teks
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}      % Jarak antar-float
+
+%--------------------------------------------------------------
+% # Header & Footer (fancyhdr)
+%--------------------------------------------------------------
+\usepackage{fancyhdr}
+
+% Halaman preliminari: nomor halaman romawi kecil, tengah atas
+\fancypagestyle{frontmatter}{%
+  \fancyhf{}
+  \fancyhead[RO,LE]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Halaman isi/bab: nomor halaman arab, kanan atas
+\fancypagestyle{mainmatter}{%
+  \fancyhf{}
+  \fancyhead[RO,LE]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Halaman plain (halaman pertama bab) = sama seperti mainmatter
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[RO,LE]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+%--------------------------------------------------------------
+% # Format Judul Bab & Subbab (titlesec)
+%--------------------------------------------------------------
+\usepackage{titlesec}
+
+% Bab utama : 14pt, tebal, rata tengah, dengan huruf kapital otomatis
+% Format    : "I  PENDAHULUAN" (semua dalam satu baris)
+\titleformat{\chapter}[block]
+  {\centering\fontsize{14pt}{17pt}\selectfont\bfseries}
+  {\thechapter\enspace}
+  {0pt}
+  {\MakeUppercase}
+  []
+
+% Jarak sebelum dan sesudah judul bab
+\titlespacing*{\chapter}{0pt}{-30pt}{24pt}
+
+% Subbab    : 12pt, tebal, rata kiri
+\titleformat{\section}
+  {\fontsize{12pt}{14pt}\selectfont\bfseries}
+  {\thesection}
+  {1em}
+  {}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+% Sub-subbab: 12pt, tebal, rata kiri, lebih dalam
+\titleformat{\subsection}
+  {\fontsize{12pt}{14pt}\selectfont\bfseries}
+  {\thesubsection}
+  {1em}
+  {}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+
+% Sub-sub-subbab: 12pt, tebal, rata kiri, lebih dalam lagi
+\titleformat{\subsubsection}
+  {\fontsize{12pt}{14pt}\selectfont\bfseries}
+  {\thesubsubsection}
+  {1em}
+  {}
+\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+
+%--------------------------------------------------------------
+% # Penomoran Bab & Subbab
+% Bab     : Romawi (I, II, III...)
+% Subbab  : 1.1, 1.2, dst. (berurutan dengan nomor bab)
+%--------------------------------------------------------------
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+%--------------------------------------------------------------
+% # Penomoran Gambar & Tabel
+% Penomoran berurutan di seluruh dokumen (tidak reset per bab)
+%--------------------------------------------------------------
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+
+%--------------------------------------------------------------
+% # Keterangan Gambar & Tabel (caption)
+% Format sesuai template IPB:
+%   - Gambar 1 Judul gambar (di bawah gambar)
+%   - Tabel 1 Judul tabel (di atas tabel)
+%   - Tanpa titik dua, tanpa bold/italic pada label maupun judul
+%   - Hanging indentation, baris lanjutan rata dengan awal judul
+%   - Rata kiri (justified=false)
+%--------------------------------------------------------------
+\usepackage{caption}
+
+% Format dasar
+\DeclareCaptionFormat{ipbcap}{#1#2#3\par}
+\DeclareCaptionLabelFormat{ipblabel}{#1~#2}  % "Gambar 1" / "Tabel 1"
+
+\captionsetup{
+  format        = hang,           % Hanging indent (baris lanjutan rata dengan judul)
+  labelformat   = ipblabel,
+  labelsep      = space,          % Tanpa titik dua, hanya spasi
+  font          = normalsize,     % 12pt sama dengan teks
+  labelfont     = {},             % Label tidak bold
+  textfont      = {},             % Judul tidak bold maupun italic
+  justification = justified,        % Rata kiri-kanan
+  singlelinecheck = false,
+  hangindent    = 0pt             % LaTeX akan otomatis pakai lebar label
+}
+
+\captionsetup[figure]{
+  name     = Gambar,
+  position = below,               % Caption di bawah gambar
+  justification = justified,      % Caption panjang tetap rata kiri-kanan
+  singlelinecheck = true          % Caption satu baris akan diposisikan ke tengah
+}
+
+\captionsetup[table]{
+  name     = Tabel,
+  position = above                % Caption di atas tabel
+}
+
+% Counter lampiran untuk caption
+\newcounter{lampiran}
+\renewcommand{\thelampiran}{\arabic{lampiran}}
+\newcommand{\captionlampiran}[1]{%
+  \refstepcounter{lampiran}%
+  \par\noindent\hangindent=5.5em
+  \textbf{}\makebox[5em][l]{Lampiran \thelampiran}#1\par
+}
+
+%--------------------------------------------------------------
+% # Daftar Isi, Daftar Tabel, Daftar Gambar (tocloft)
+%--------------------------------------------------------------
+\usepackage{tocloft}
+
+% Judul daftar isi
+\renewcommand{\cfttoctitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftlottitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftafterlottitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftafterloftitle}{\hfill}
+
+% Entri bab di daftar isi (tidak bold, menggunakan font normal)
+\renewcommand{\cftchapfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Indentasi entri di daftar isi
+\setlength{\cftchapindent}{0pt}
+\setlength{\cftsecindent}{1.5em}
+\setlength{\cftsubsecindent}{3.5em}
+
+% Jarak antar entri
+\setlength{\cftbeforechapskip}{0pt}
+\setlength{\cftbeforesecskip}{0pt}
+
+% Format entri bab seperti "I  PENDAHULUAN"
+\renewcommand{\cftchapaftersnum}{\enspace}
+
+%--------------------------------------------------------------
+% # Format Tabel
+%--------------------------------------------------------------
+\usepackage{booktabs}        % \toprule, \midrule, \bottomrule
+\usepackage{array}           % Opsi kolom tambahan
+\usepackage{tabularx}        % Tabel lebar fleksibel
+\usepackage{multirow}        % Sel bergabung baris
+\usepackage{longtable}       % Tabel panjang lintas halaman
+
+%--------------------------------------------------------------
+% # Format Gambar
+%--------------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{float}            % Opsi [H] untuk posisi gambar
+
+%--------------------------------------------------------------
+% # Format Matematika
+%--------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%--------------------------------------------------------------
+% # Referensi & Sitasi
+%--------------------------------------------------------------
+\usepackage[authoryear,round,sort&compress]{natbib}
+\setlength{\bibsep}{0pt}  % Tidak ada jarak ekstra antar referensi
+
+%--------------------------------------------------------------
+% # Hyperlink (harus dimuat terakhir)
+%--------------------------------------------------------------
+\usepackage[
+  colorlinks=false,
+  hidelinks,
+  pdfauthor={Nama Mahasiswa},
+  pdftitle={Judul Skripsi},
+  pdfsubject={Skripsi S1 IPB},
+  pdfkeywords={keyword1, keyword2}
+]{hyperref}
+
+%--------------------------------------------------------------
+% # Paket tambahan untuk perbaikan tipografi, warna, URL, dan kontrol list
+%--------------------------------------------------------------
+\usepackage{microtype}      % Perbaikan tipografi otomatis
+\usepackage{xcolor}         % Dukungan warna
+\usepackage{url}            % Format URL
+\usepackage{enumitem}       % Kontrol list/enumerate
+\usepackage{hanging}        % Hanging indent untuk daftar pustaka manual
+
+
+%==============================================================
+% # TITIK MULAI DOKUMEN
+%==============================================================
+\begin{document}
+
+%--------------------------------------------------------------
+% # BAGIAN AWAL (PRELIMINARI)
+%--------------------------------------------------------------
+\frontmatter
+\pagestyle{frontmatter}
+
+\include{chapters/cover}
+\include{chapters/pernyataan}
+\include{chapters/abstrak}
+\include{chapters/lembar_persetujuan}
+\include{chapters/prakata}
+\include{chapters/daftar_isi}
+
+%--------------------------------------------------------------
+% # BAGIAN INTI (BAB)
+%--------------------------------------------------------------
+% Hindari halaman kosong di transisi frontmatter -> mainmatter saat twoside.
+\let\origcleardoublepage\cleardoublepage
+\let\cleardoublepage\clearpage
+\mainmatter
+\let\cleardoublepage\origcleardoublepage
+\pagestyle{mainmatter}
+
+\include{chapters/bab1_pendahuluan}
+\include{chapters/bab2_tinjauan_pustaka}
+\include{chapters/bab3_metode}
+\include{chapters/bab4_hasil_pembahasan}
+\include{chapters/bab5_simpulan_saran}
+
+%--------------------------------------------------------------
+% # BAGIAN AKHIR
+%--------------------------------------------------------------
+% Catatan: \backmatter menonaktifkan penomoran bab di book class.
+% Meskipun begitu, Chapter* digunakan agar tidak dapat nomor, 
+% tapi halaman tetap urut dan fancyhdr tetap berjalan.
+\backmatter
+\pagestyle{mainmatter}
+
+\include{chapters/daftar_pustaka}
+\include{chapters/lampiran}
+\include{chapters/riwayat_hidup}
+
+\end{document}
