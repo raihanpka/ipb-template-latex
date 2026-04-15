@@ -1,9 +1,11 @@
 %==============================================================
-% HALAMAN JUDUL (COVER)
-% Sesuaikan bagian bertanda [ISIAN] dengan data mahasiswa
+% HALAMAN JUDUL DALAM (COVER DALAM)
+% Sama seperti cover luar, namun ditambah keterangan
+% "Skripsi sebagai salah satu syarat..." di bawah nama penulis.
+% Tanpa logo IPB. Departemen/Fakultas di-anchor ke bawah halaman.
 %==============================================================
 
-\begin{titlepage}
+\clearpage
 \thispagestyle{empty}
 \begin{center}
 
@@ -16,18 +18,22 @@ LIMA BELAS KATA TIDAK TERMASUK\\
 KATA DEPAN DAN KATA SAMBUNG
 }
 
-\vspace{3cm}
+\vspace{4cm}
 
 {\fontsize{14pt}{17pt}\selectfont\bfseries
 NAMA PENULIS
 }
 
-\vspace{6cm}
-
-% Logo IPB tengah halaman
-\includegraphics[width=2.5cm]{images/ipb_logo}
-
 \vspace{4cm}
+
+{\fontsize{12pt}{14pt}\selectfont
+Skripsi\\
+sebagai salah satu syarat untuk memperoleh gelar\\
+Sarjana pada\\
+Program Studi \ldots\ldots.
+}
+
+\vfill
 
 {\fontsize{14pt}{17pt}\selectfont\bfseries
 NAMA DEPARTEMEN/PROGRAM STUDI\\
@@ -38,7 +44,4 @@ BOGOR\\
 }
 
 \end{center}
-\end{titlepage}
-
-% Halaman kosong di balik cover dalam
-\cleardoublepage
+\clearpage
