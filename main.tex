@@ -41,14 +41,16 @@
 %--------------------------------------------------------------
 % # Ukuran Halaman & Margin
 % - A4: 21 x 29.7 cm
-% - Kiri 4 cm (binding), Kanan 3 cm, Atas 3 cm, Bawah 3 cm
+% - Atas 3 cm, Bawah 3 cm, Dalam 3 cm, Luar 3 cm, Gutter 1 cm
+% - Gutter otomatis berpindah sisi (kiri/kanan) sesuai twoside
 %--------------------------------------------------------------
 \usepackage[
   a4paper,
   top=3cm,
-  left=4cm,
-  right=3cm,
   bottom=3cm,
+  inner=3cm,
+  outer=3cm,
+  bindingoffset=1cm,
   headheight=15pt
 ]{geometry}
 
@@ -57,11 +59,12 @@
 %--------------------------------------------------------------
 \usepackage{setspace}
 \singlespacing                   % Spasi tunggal (sesuai template)
+\raggedbottom                    % Halaman tidak dipaksa rata bawah (mencegah gap besar)
 \usepackage{indentfirst}          % Indentasi paragraf pertama
 \setlength{\parindent}{1cm}      % Indentasi awal paragraf ±1 cm
 \setlength{\parskip}{0pt}        % Tidak ada jarak antar paragraf
 \setlength{\textfloatsep}{12pt plus 2pt minus 2pt}  % Jarak float atas/bawah ke teks
-\setlength{\intextsep}{8pt plus 2pt minus 2pt}    % Jarak float di tengah teks
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}    % Jarak float [H] di tengah teks (~1 baris)
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}      % Jarak antar-float
 
 %--------------------------------------------------------------
@@ -98,14 +101,18 @@
 %--------------------------------------------------------------
 \usepackage{titlesec}
 
-% Bab utama : 14pt, tebal, rata tengah, dengan huruf kapital otomatis
+% Bab utama : 14pt, tebal, rata tengah
 % Format    : "I  PENDAHULUAN" (semua dalam satu baris)
+% Catatan   : Judul bab HARUS ditulis dalam huruf kapital secara manual.
+%             \MakeUppercase sengaja tidak digunakan karena konflik dengan
+%             paket babel (Indonesian) dan titlesec ketika judul mengandung
+%             perintah LaTeX seperti \\ atau \textit{}.
 \titleformat{\chapter}[block]
   {\centering\fontsize{14pt}{17pt}\selectfont\bfseries}
   {\thechapter\enspace}
   {0pt}
-  {\MakeUppercase}
-  []
+  {}
+  [\global\leftskip=0pt\global\parindent=1cm]
 
 % Jarak sebelum dan sesudah judul bab
 \titlespacing*{\chapter}{0pt}{-30pt}{24pt}
@@ -116,23 +123,31 @@
   {\thesection}
   {1em}
   {}
+  [\global\leftskip=0pt\global\parindent=1cm]
 \titlespacing*{\section}{0pt}{12pt}{6pt}
 
-% Sub-subbab: 12pt, tebal, rata kiri, lebih dalam
-\titleformat{\subsection}
-  {\fontsize{12pt}{14pt}\selectfont\bfseries}
+% Sub-subbab: 12pt, TIDAK tebal, indent di bawah subbab, body text ikut indent
+% Line 1: leftskip 1.5em + parindent 1em = 2.5em (sejajar "C")
+% Line 2+: leftskip 1.5em (sejajar "2")
+\titleformat{\subsection}[block]
+  {\fontsize{12pt}{14pt}\selectfont}
   {\thesubsection}
   {1em}
   {}
-\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+  [\global\leftskip=1.5em\global\parindent=1em]
+% Freeze parindent=1em ke dalam titlespacing (bukan 1cm default)
+\setlength{\parindent}{1em}
+\titlespacing{\subsection}{2em}{6pt}{3pt}
+\setlength{\parindent}{1cm}
 
-% Sub-sub-subbab: 12pt, tebal, rata kiri, lebih dalam lagi
+% Sub-sub-subbab: 12pt, tidak tebal, indent lebih dalam
 \titleformat{\subsubsection}
-  {\fontsize{12pt}{14pt}\selectfont\bfseries}
+  {\fontsize{12pt}{14pt}\selectfont}
   {\thesubsubsection}
   {1em}
   {}
-\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+  [\global\leftskip=5em]
+\titlespacing*{\subsubsection}{3.5em}{6pt}{3pt}
 
 %--------------------------------------------------------------
 % # Penomoran Bab & Subbab
@@ -183,21 +198,14 @@
   name     = Gambar,
   position = below,               % Caption di bawah gambar
   justification = justified,      % Caption panjang tetap rata kiri-kanan
-  singlelinecheck = true          % Caption satu baris akan diposisikan ke tengah
+  singlelinecheck = true,         % Caption satu baris akan diposisikan ke tengah
+  skip     = 6pt                  % Gap antara gambar dan caption di bawahnya
 }
 
 \captionsetup[table]{
   name     = Tabel,
-  position = above                % Caption di atas tabel
-}
-
-% Counter lampiran untuk caption
-\newcounter{lampiran}
-\renewcommand{\thelampiran}{\arabic{lampiran}}
-\newcommand{\captionlampiran}[1]{%
-  \refstepcounter{lampiran}%
-  \par\noindent\hangindent=5.5em
-  \textbf{}\makebox[5em][l]{Lampiran \thelampiran}#1\par
+  position = above,               % Caption di atas tabel
+  skip     = 0pt                  % Tidak ada gap ekstra antara caption dan tabel
 }
 
 %--------------------------------------------------------------
@@ -216,19 +224,37 @@
 % Entri bab di daftar isi (tidak bold, menggunakan font normal)
 \renewcommand{\cftchapfont}{\normalfont}
 \renewcommand{\cftchappagefont}{\normalfont}
-\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchapleader}{\hfill}          % Tanpa titik-titik (sesuai PPKI)
 
-% Indentasi entri di daftar isi
+% Entri subbab: tanpa titik-titik juga
+\renewcommand{\cftsecleader}{\hfill}
+\renewcommand{\cftsubsecleader}{\hfill}
+
+% Entri daftar tabel dan daftar gambar: tanpa titik-titik
+\renewcommand{\cfttableader}{\hfill}
+\renewcommand{\cftfigleader}{\hfill}
+
+% Indentasi entri di daftar isi (tanpa indent)
 \setlength{\cftchapindent}{0pt}
-\setlength{\cftsecindent}{1.5em}
-\setlength{\cftsubsecindent}{3.5em}
+\setlength{\cftchapnumwidth}{2.5em}    % Lebar nomor bab (cukup untuk "III" dst.)
+\setlength{\cftsecindent}{2.5em}
+\setlength{\cftsecnumwidth}{2.5em}     % Lebar nomor subbab (cukup untuk "1.1" dst.)
+\setlength{\cftsubsecindent}{5.0em}
 
 % Jarak antar entri
-\setlength{\cftbeforechapskip}{0pt}
+\setlength{\cftbeforechapskip}{6pt}
 \setlength{\cftbeforesecskip}{0pt}
 
 % Format entri bab seperti "I  PENDAHULUAN"
 \renewcommand{\cftchapaftersnum}{\enspace}
+
+% Daftar Lampiran otomatis (mekanisme sama seperti Daftar Gambar)
+\newlistof{lampiran}{lamp}{DAFTAR LAMPIRAN}
+\renewcommand{\cftlamptitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftafterlamptitle}{\hfill}
+\renewcommand{\cftlampiranleader}{\hfill}
+\setlength{\cftlampiranindent}{1.5em}
+\setlength{\cftlampirannumwidth}{2.3em}
 
 %--------------------------------------------------------------
 % # Format Tabel
@@ -253,8 +279,11 @@
 
 %--------------------------------------------------------------
 % # Referensi & Sitasi
+% Gaya sitasi IPB: author-year (Harvard), tanpa koma antara penulis dan tahun
+% Contoh: (Widowati et al. 2020) bukan (Widowati et al., 2020)
 %--------------------------------------------------------------
 \usepackage[authoryear,round,sort&compress]{natbib}
+\setcitestyle{aysep={}}           % Tanpa pemisah antara penulis dan tahun
 \setlength{\bibsep}{0pt}  % Tidak ada jarak ekstra antar referensi
 
 %--------------------------------------------------------------
@@ -277,6 +306,10 @@
 \usepackage{url}            % Format URL
 \usepackage{enumitem}       % Kontrol list/enumerate
 \usepackage{hanging}        % Hanging indent untuk daftar pustaka manual
+\usepackage{etoolbox}       % Hook untuk \pretocmd
+
+% Daftar isi hanya sampai subbab (section), sub-subbab tidak masuk
+\setcounter{tocdepth}{1}
 
 
 %==============================================================
@@ -288,13 +321,22 @@
 % # BAGIAN AWAL (PRELIMINARI)
 %--------------------------------------------------------------
 \frontmatter
-\pagestyle{frontmatter}
+
+%--- Halaman tanpa nomor: cover s/d prakata ---
+\pagestyle{empty}
 
 \include{chapters/cover}
 \include{chapters/pernyataan}
 \include{chapters/abstrak}
+\include{chapters/hak_cipta}
+\include{chapters/cover_dalam}
+\include{chapters/tim_penguji}
 \include{chapters/lembar_persetujuan}
 \include{chapters/prakata}
+
+%--- Halaman dengan nomor romawi mulai dari daftar isi ---
+\pagestyle{frontmatter}
+
 \include{chapters/daftar_isi}
 
 %--------------------------------------------------------------
